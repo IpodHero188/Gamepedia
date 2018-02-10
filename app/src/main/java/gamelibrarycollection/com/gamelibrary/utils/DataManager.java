@@ -11,7 +11,6 @@ import java.util.List;
 
 import gamelibrarycollection.com.gamelibrary.database.ApplicationSQLOpenHelper;
 import gamelibrarycollection.com.gamelibrary.models.Library;
-import gamelibrarycollection.com.gamelibrary.models.LibraryCollection;
 import gamelibrarycollection.com.gamelibrary.models.VideoGame;
 
 /**
@@ -40,47 +39,43 @@ public class DataManager {
     }
 //TODO: Make sure to add catch exception to method that calls this
     //Will be used to populate display of user's libraries
-    public List<Library> getLibraryCollection(){
+    public List<Library> getLibraryCollection() throws SQLException{
 
         openDatabase();
 
-        String sql = "SELECT * FROM Library_Collection";
-        LibraryCollection libCollection;
-        Cursor cr = database.rawQuery(sql, null);
+            List<Library> libaryList = new ArrayList<>();
+            String libSql = "SELECT * FROM Library";
+            Cursor libCr = database.rawQuery(libSql, null);
 
-        if( cr != null && cr.getCount() > 0){
-            cr.moveToFirst();
-            libCollection = new LibraryCollection();
+            try{
+                while (libCr.moveToNext()) {
+                    Library library = new Library();
+                    library.set_id(libCr.getLong(libCr.getColumnIndex("_id"))); //check to see if this errors
+                    library.setName(libCr.getString(libCr.getColumnIndex("library_name")));
 
-            while(cr.moveToNext()){
-                Library library = new Library();
-                library.set_id(cr.getLong(cr.getColumnIndex("_id"))); //check to see if this errors
-                library.setName(cr.getString(cr.getColumnIndex("library_name")));
-
-                String libSql = "SELECT * FROM Library WHERE Library._id = Library_Collection._id";
-                Cursor libCursor = database.rawQuery(libSql, null);
-
-                libCursor.moveToFirst();
-                while (libCursor.moveToNext()){
                     String gameSql = "SELECT * FROM Video_Game WHERE Video_Game._id = Library.game_id";
                     Cursor gameCursor = database.rawQuery(gameSql, null);
+                    try {
+                        while (gameCursor.moveToNext()) {
+                            VideoGame game = new VideoGame();
+                            game.set_id(gameCursor.getLong(gameCursor.getColumnIndex("_id")));
+                            game.setTitle(gameCursor.getString(gameCursor.getColumnIndex("title")));
+                            game.setPlatform(gameCursor.getString(gameCursor.getColumnIndex("platform")));
 
-                    gameCursor.moveToFirst();
-                    while(gameCursor.moveToNext()) {
-                        VideoGame game = new VideoGame();
-                        game.set_id(cr.getLong(cr.getColumnIndex("_id")));
-                        game.setTitle(cr.getString(cr.getColumnIndex("title")));
-                        game.setPlatform(cr.getString(cr.getColumnIndex("platform")));
-
-                        library.getGameList().add(game);
+                            library.getGameList().add(game);
+                        }
+                        libaryList.add(library);
+                    } finally {
+                        gameCursor.close();
                     }
+
                 }
-                LibraryCollection.getLibraryList().add(library);
+            } finally {
+                libCr.close();
             }
-        }
         closeDatabase();
 
-        return LibraryCollection.getLibraryList();
+        return libaryList;
     }
 
     private void openDatabase() throws SQLException{
@@ -175,6 +170,10 @@ public class DataManager {
             }
         }
         return index;
+    }
+
+    public boolean hasEmptyLibraries(){
+        return this.getLibraryCollection().isEmpty();
     }
 
 }

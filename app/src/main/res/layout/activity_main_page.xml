@@ -7,43 +7,65 @@
     tools:context="gamelibrarycollection.com.gamelibrary.GamepediaApplication">
 
     <Button
-        android:id="@+id/add"
-        android:layout_width="115dp"
+        android:id="@+id/addBtn"
+        android:layout_width="0dp"
         android:layout_height="87dp"
-        android:text="Add Collection"
-        android:layout_marginRight="@+id/open"
-        android:layout_marginTop="@+id/wishlist"
-        tools:layout_editor_absoluteX="230dp"
-        tools:layout_editor_absoluteY="40dp" />
+        android:text="Create Library"
+        android:layout_marginRight="@+id/openBtn"
+        android:layout_marginTop="@+id/wishBtn"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintRight_creator="1"
+        android:layout_marginEnd="@+id/openBtn"
+        app:layout_constraintRight_toRightOf="@+id/wishBtn"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="@+id/wishBtn"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/delete"
+        android:id="@+id/deleteBtn"
         android:layout_width="115dp"
-        android:layout_height="87dp"
-        android:text="Delete Collection"
-        android:layout_marginBottom="@+id/open"
-        android:layout_marginLeft="@+id/wishlist"
-        tools:layout_editor_absoluteX="39dp"
-        tools:layout_editor_absoluteY="315dp" />
+        android:layout_height="0dp"
+        android:text="Delete Library"
+        android:layout_marginBottom="@+id/openBtn"
+        android:layout_marginLeft="@+id/wishBtn"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        android:layout_marginStart="@+id/wishBtn"
+        app:layout_constraintBottom_toBottomOf="@+id/wishBtn"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/wishBtn" />
 
     <Button
-        android:id="@+id/wishlist"
+        android:id="@+id/wishBtn"
         android:layout_width="115dp"
         android:layout_height="87dp"
         android:text="Wishlist"
-        android:layout_marginBottom="@+id/add"
-        android:layout_marginRight="@+id/delete"
-        tools:layout_editor_absoluteX="230dp"
-        tools:layout_editor_absoluteY="315dp" />
+        android:layout_marginBottom="@+id/addBtn"
+        android:layout_marginRight="@+id/deleteBtn"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="@+id/deleteBtn"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <Button
-        android:id="@+id/open"
-        android:layout_width="115dp"
-        android:layout_height="87dp"
-        android:text="Open Collection"
-        android:layout_marginLeft="@+id/add"
-        android:layout_marginTop="@+id/delete"
-        tools:layout_editor_absoluteX="39dp"
-        tools:layout_editor_absoluteY="40dp" />
+        android:id="@+id/openBtn"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="Open Library"
+        android:layout_marginLeft="@+id/addBtn"
+        android:layout_marginTop="@+id/deleteBtn"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        android:layout_marginStart="@+id/addBtn"
+        app:layout_constraintBottom_toBottomOf="@+id/addBtn"
+        app:layout_constraintRight_toRightOf="@+id/deleteBtn"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="@+id/deleteBtn"
+        app:layout_constraintTop_toTopOf="@+id/addBtn"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintVertical_bias="1.0" />
 
 </android.support.constraint.ConstraintLayout>

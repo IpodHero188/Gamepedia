@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.provider.MediaStore;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import gamelibrarycollection.com.gamelibrary.database.ApplicationSQLOpenHelper;
@@ -21,11 +22,11 @@ public class DataManager {
 
     private static DataManager sInstance;
     private static Context context;
-    private static SQLiteDatabase database;
     private static ApplicationSQLOpenHelper appSQLHelper;
+    private List<Library> libraries;
 
 
-    public DataManager(){
+    private DataManager(Context context){
         appSQLHelper = new ApplicationSQLOpenHelper(context);
     }
 
@@ -33,90 +34,35 @@ public class DataManager {
         DataManager.context = context;
 
         if(sInstance == null){
-            sInstance = new DataManager();
+            sInstance = new DataManager(context);
         }
         return sInstance;
     }
-//TODO: Make sure to add catch exception to method that calls this
-    //Will be used to populate display of user's libraries
-    public List<Library> getLibraryCollection() throws SQLException{
 
-        openDatabase();
-
-            List<Library> libaryList = new ArrayList<>();
-            String libSql = "SELECT * FROM Library";
-            Cursor libCr = database.rawQuery(libSql, null);
-
-            try{
-                while (libCr.moveToNext()) {
-                    Library library = new Library();
-                    library.set_id(libCr.getLong(libCr.getColumnIndex("_id"))); //check to see if this errors
-                    library.setName(libCr.getString(libCr.getColumnIndex("library_name")));
-
-                    String gameSql = "SELECT * FROM Video_Game WHERE Video_Game._id = Library.game_id";
-                    Cursor gameCursor = database.rawQuery(gameSql, null);
-                    try {
-                        while (gameCursor.moveToNext()) {
-                            VideoGame game = new VideoGame();
-                            game.set_id(gameCursor.getLong(gameCursor.getColumnIndex("_id")));
-                            game.setTitle(gameCursor.getString(gameCursor.getColumnIndex("title")));
-                            game.setPlatform(gameCursor.getString(gameCursor.getColumnIndex("platform")));
-
-                            library.getGameList().add(game);
-                        }
-                        libaryList.add(library);
-                    } finally {
-                        gameCursor.close();
-                    }
-
-                }
-            } finally {
-                libCr.close();
-            }
-        closeDatabase();
-
-        return libaryList;
+    public boolean hasEmptyLibraries(){
+        return libraries.isEmpty();
     }
 
-    private void openDatabase() throws SQLException{
-        database = appSQLHelper.getWritableDatabase();
+    public void buildLibraryList(){
+        //TODO: Add Exception handling here
+            libraries = appSQLHelper.retrieveLibrariesfromDatabase();
     }
 
-    public void closeDatabase() throws SQLException{
-        database.close();
-        //We may need to close the helper class too
+    public List<Library> getLibraries(){
+        return libraries;
     }
 
-    /*public boolean updateLibraryCollection(LibraryCollection collection){
-        openDatabase();
-        database.replace
 
-    }*/
-/*
-    public Library retrieveLibrary(){
-        //Call to JSON file
-        //Use Service class to extract and format into Java Objects to return
+    public void addNewLibrary(String libraryName){
+        Library library = new Library();
+        library.setName(libraryName);
+        library.setGameList(new ArrayList<VideoGame>());
     }
-*/
-
-/*
-    public void saveLibrary(Library lib){
-        //write to JSON
-    }
-*/
 
 
-    //TODO: Delegate method into smaller parts?
-/*
-    public VideoGame getGameInformationService(){
-        //Make call to Web Service API to get Video Game data
-        //Call another service to format data
-        //Return data
-    }
-*/
     /*
-       Adding a single video game to the current library if the game does not currently exist within the library for both Platform AND Title.
-     */
+   Adding a single video game to the current library if the game does not currently exist within the library for both Platform AND Title.
+ */
     public boolean addGameToLibrary(VideoGame game, Library library){
         boolean status = false;
         if(!this.existInLibrary(game, library)){
@@ -150,30 +96,68 @@ public class DataManager {
         return remove_status;
     }
 
+    // Checks to see if a game exists within the passed in game library
     public boolean existInLibrary(VideoGame game, Library library){
-        boolean exist_status = false;
-        List<VideoGame> gameList = library.getGameList();
-        for(VideoGame vGame : gameList){
-            exist_status = vGame.getTitle().equals(game.getTitle()) && vGame.getPlatform().equals(game.getPlatform());
+        List<VideoGame> gameList =library.getGameList();
+        boolean exists = false;
+        Iterator<VideoGame> iterator = gameList.iterator();
+
+        while(iterator.hasNext() && !exists){
+            VideoGame vGame = iterator.next();
+            exists = vGame.getTitle().equals(game.getTitle()) && vGame.getPlatform().equals(game.getPlatform())? true: false;
         }
-        return exist_status;
+        return exists;
     }
 
     public int getGameLocationFromLibrary(VideoGame game, Library library){
-        boolean exist_status = false;
         int index = 0;
         List<VideoGame> gameList = library.getGameList();
-        for(VideoGame vGame : gameList){
-            exist_status = vGame.getTitle().equals(game.getTitle()) && vGame.getPlatform().equals(game.getPlatform());
-            if(!exist_status){
+        boolean exists = false;
+
+        Iterator<VideoGame> iterator = gameList.iterator();
+
+        while(iterator.hasNext() && !exists){
+            VideoGame vGame = iterator.next();
+            exists = vGame.getTitle().equals(game.getTitle()) && vGame.getPlatform().equals(game.getPlatform())? true: false;
+
+            if(!exists){
                 index++;
             }
         }
+
         return index;
+
     }
 
-    public boolean hasEmptyLibraries(){
-        return this.getLibraryCollection().isEmpty();
+// TODO: The methods below probably being moved to LibraryAdapter
+    /*public boolean updateLibraryCollection(LibraryCollection collection){
+        openDatabase();
+        database.replace
+
+    }*/
+/*
+    public Library retrieveLibrary(){
+        //Call to JSON file
+        //Use Service class to extract and format into Java Objects to return
     }
+*/
+
+/*
+    public void saveLibrary(Library lib){
+        //write to JSON
+    }
+*/
+
+
+    //TODO: Delegate method into smaller parts
+    //TODO: API REST Calls below
+/*
+    public VideoGame getGameInformationService(){
+        //Make call to Web Service API to get Video Game data
+        //Call another service to format data
+        //Return data
+    }
+*/
+
 
 }

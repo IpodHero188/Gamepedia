@@ -9,6 +9,7 @@ public class VideoGame {
     private String title;
     private String platform;
 
+    // For the API later
     private float rating;
     private String game_length;
     private int category;

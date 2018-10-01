@@ -1,4 +1,4 @@
-package gamelibrarycollection.com.gamelibrary;
+package gamelibrarycollection.com.gamelibrary.activity;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -6,20 +6,21 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import gamelibrarycollection.com.gamelibrary.R;
 import gamelibrarycollection.com.gamelibrary.utils.DataManager;
 
-public class GamepediaApplication extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
-    private static GamepediaApplication sInstance;
+    private static MainActivity sInstance;
 
     private DataManager dataManager;
     Button addBtn,deleteBtn,openBtn,wishBtn;
 
-    public GamepediaApplication(){
+    public MainActivity(){
         sInstance = this;
     }
 
-    public static synchronized GamepediaApplication getInstance(){
+    public static synchronized MainActivity getInstance(){
         return sInstance;
     }
 
@@ -28,7 +29,6 @@ public class GamepediaApplication extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
 
-        dataManager = new DataManager();
         addBtn = (Button) findViewById(R.id.addBtn);
         deleteBtn = (Button) findViewById(R.id.deleteBtn);
         openBtn = (Button) findViewById(R.id.openBtn);

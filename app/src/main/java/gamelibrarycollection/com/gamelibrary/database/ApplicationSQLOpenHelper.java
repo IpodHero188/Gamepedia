@@ -77,4 +77,5 @@ public class ApplicationSQLOpenHelper extends SQLiteAssetHelper {
 
         return libraryList;
     }
+    
 }

@@ -28,30 +28,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
-
-        addBtn = (Button) findViewById(R.id.addBtn);
-        deleteBtn = (Button) findViewById(R.id.deleteBtn);
-        openBtn = (Button) findViewById(R.id.openBtn);
-        wishBtn = (Button) findViewById(R.id.wishBtn);
-
-        openBtn.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                Intent openIntent = new Intent(v.getContext(), OpenLibraryActivity.class);
-                startActivity(openIntent);
-            }
-        });
-
-        addBtn.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                //logic here
-            }
-        });
-
-        deleteBtn.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                //logic here
-            }
-        });
     }
+
+    //TODO: Abstract this logic during code hardening
+    public void openLibraryOnClick(View view){
+        Intent openIntent = new Intent(this, OpenLibraryActivity.class);
+        startActivity(openIntent);
+    }
+
+    public void createLibraryOnClick(View view){
+        Intent createIntent = new Intent(this, CreateLibraryActivity.class);
+        startActivity(createIntent);
+    }
+
 
 }

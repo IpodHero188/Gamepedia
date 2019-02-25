@@ -53,10 +53,13 @@ public class DataManager {
     }
 
 
-    public void addNewLibrary(String libraryName){
+    //TODO: Add Database call to this method
+    public boolean addNewLibrary(String libraryName){
         Library library = new Library();
         library.setName(libraryName);
         library.setGameList(new ArrayList<VideoGame>());
+
+        return libraries.add(library);
     }
 
 

@@ -11,12 +11,13 @@ public class VideoGame {
 
     // For the API later
     private float rating;
-    private String game_length;
+    private String gameLength;
     private int category;
 
-    private String developer;
-    private String publisher;
-    private String genre;
+    private String company;
+    private String genre; //TODO: turn into String Array
+    private String description;
+    private String boxArt;
 
     //TODO: Add barcode element
 
@@ -54,12 +55,12 @@ public class VideoGame {
         this.rating = rating;
     }
 
-    public String getGame_length() {
-        return game_length;
+    public String getGameLength() {
+        return gameLength;
     }
 
-    public void setGame_length(String game_length) {
-        this.game_length = game_length;
+    public void setGameLength(String gameLength) {
+        this.gameLength = gameLength;
     }
 
     public int getCategory() {
@@ -70,20 +71,12 @@ public class VideoGame {
         this.category = category;
     }
 
-    public String getDeveloper() {
-        return developer;
+    public String getCompany() {
+        return company;
     }
 
-    public void setDeveloper(String developer) {
-        this.developer = developer;
-    }
-
-    public String getPublisher() {
-        return publisher;
-    }
-
-    public void setPublisher(String publisher) {
-        this.publisher = publisher;
+    public void setCompany(String company) {
+        this.company = company;
     }
 
     public String getGenre() {
